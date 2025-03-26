@@ -3,20 +3,64 @@
   "module": "index.ts",
   "type": "commonjs",
   "main": "dist/index.js",
+  "version": "1.0.0",
+  "description": "Shortcut app for Windows, macOS and Linux",
+  "author": {
+    "name": "highesttt & RedCommand",
+    "email": "senard.maxime@gmail.com"
+  },
+  "contributors": [
+    "RedCommand <senard.maxime@gmail.com>",
+    "highesttt <github@sk.network>"
+  ],
+  "license": "GPL-3.0-only",
   "devDependencies": {
     "@types/bun": "latest",
     "@types/electron": "^1.6.10",
-    "@types/node": "^20.11.5"
+    "@types/node": "^20.11.5",
+    "electron": "^35.0.3",
+    "electron-builder": "^25.1.8"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
-  "dependencies": {
-    "electron": "^35.0.3"
-  },
   "scripts": {
     "start": "tsc && electron .",
     "build": "tsc",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "pack": "electron-builder --dir",
+    "dist": "tsc && electron-builder",
+    "dist:win": "tsc && electron-builder -w",
+    "dist:linux": "tsc && electron-builder -l"
+  },
+  "build": {
+    "appId": "com.whichkey.app",
+    "productName": "WhichKey",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "src/index.html"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "rpm"
+      ],
+      "category": "Utility",
+      "icon": "build/icon.png"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icon.icns"
+    }
+  },
+  "dependencies": {
+    "whichkey": "file:"
   }
 }
