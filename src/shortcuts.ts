@@ -1,5 +1,6 @@
 import { globalShortcut, BrowserWindow, ipcMain } from "electron";
 import { exec } from "child_process";
+import { ConfigLoader } from "./config/configLoader";
 
 interface ShortcutAction {
   description: string;
@@ -16,31 +17,55 @@ export class ShortcutManager {
   private shortcuts: ShortcutMap = {};
   private timeoutId: NodeJS.Timer | null = null;
   private prefix: string = "";
-
+  private configLoader: ConfigLoader;
 
   constructor() {
-    this.initializeShortcuts();
+    this.configLoader = new ConfigLoader();
+
     if (process.platform === "darwin") {
-      this.prefix = "open"
+      this.prefix = "open";
     } else if (process.platform === "win32") {
-      this.prefix = "start"
+      this.prefix = "start";
     } else {
-      this.prefix = "xdg-open"
+      this.prefix = "xdg-open";
     }
+
+    this.initializeShortcuts();
+
+    ipcMain.on("shortcut-added", () => {
+      this.reloadShortcuts();
+    });
   }
 
   private initializeShortcuts() {
-    this.shortcuts = {
-      t: {
-        description: "Open Terminal",
-        action: () => {
-          exec(`${this.prefix} fish`);
-        },
-      },
-    };
+    const config = this.configLoader.loadConfig();
+    this.shortcuts = {};
 
-    globalShortcut.register("Scrolllock", () => {
+    Object.entries(config.shortcuts).forEach(([key, shortcutConfig]) => {
+      this.shortcuts[key] = {
+        description: shortcutConfig.description,
+        action: () => {
+          exec(`${this.prefix} ${shortcutConfig.command}`);
+        },
+      };
+    });
+
+    globalShortcut.register("F24", () => {
       this.startListening();
+    });
+  }
+
+  private reloadShortcuts() {
+    const config = this.configLoader.loadConfig();
+    this.shortcuts = {};
+
+    Object.entries(config.shortcuts).forEach(([key, shortcutConfig]) => {
+      this.shortcuts[key] = {
+        description: shortcutConfig.description,
+        action: () => {
+          exec(`${this.prefix} ${shortcutConfig.command}`);
+        },
+      };
     });
   }
 
@@ -53,6 +78,8 @@ export class ShortcutManager {
 
     this.isListening = true;
     this.keySequence = "";
+
+    console.log("Listening for shortcuts");
 
     const letters = "abcdefghijklmnopqrstuvwxyz";
     const numbers = "0123456789";
@@ -71,10 +98,17 @@ export class ShortcutManager {
     });
 
     BrowserWindow.getAllWindows().forEach((window) => {
-      window.webContents.send("listening-started");
+      window.webContents.send("listening-started", this.getShortcutsInfo());
     });
 
     this.resetTimeout();
+  }
+
+  private getShortcutsInfo() {
+    return Object.entries(this.shortcuts).map(([key, action]) => ({
+      key,
+      description: action.description,
+    }));
   }
 
   private resetTimeout() {

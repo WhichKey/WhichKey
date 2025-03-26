@@ -1,0 +1,12 @@
+{
+  "shortcuts": {
+    "wt": {
+      "description": "Open Terminal",
+      "command": "wt"
+    },
+    "as": {
+      "description": "Open Android Studio",
+      "command": "studio64.lnk"
+    }
+  }
+}
