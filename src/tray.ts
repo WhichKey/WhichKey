@@ -59,7 +59,7 @@ export class TrayManager {
       }
     });
 
-    this.settingsWindow.loadFile('src/settings.html');
+    this.settingsWindow.loadFile('src/html/settings.html');
 
     this.settingsWindow.on('closed', () => {
       this.settingsWindow = null;
