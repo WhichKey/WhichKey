@@ -1,0 +1,22 @@
+{
+  "name": "whichkey",
+  "module": "index.ts",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/electron": "^1.6.10",
+    "@types/node": "^20.11.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "electron": "^35.0.3"
+  },
+  "scripts": {
+    "start": "tsc && electron .",
+    "build": "tsc",
+    "watch": "tsc -w"
+  }
+}
