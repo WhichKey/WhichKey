@@ -1,29 +1,21 @@
-import { app, BrowserWindow } from 'electron';
-import * as path from 'path';
+import { app } from 'electron';
+import { ShortcutManager } from './shortcuts';
+import { TrayManager } from './tray';
 
-function createWindow() {
-  const win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    frame: false,
-    transparent: true,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
-    }
-  });
+let shortcutManager: ShortcutManager;
+let trayManager: TrayManager;
 
-  win.loadFile('src/index.html');
+function initialize() {
+  shortcutManager = new ShortcutManager();
+  trayManager = new TrayManager();
 }
 
 app.whenReady().then(() => {
-  createWindow();
+  initialize();
+});
 
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
-  });
+app.on('before-quit', () => {
+  shortcutManager.cleanup();
 });
 
 app.on('window-all-closed', () => {

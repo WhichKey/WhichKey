@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WhichKey Settings</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f5f5f5;
+      }
+      .shortcut-list {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .shortcut-item {
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        gap: 10px;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+      }
+      .shortcut-key {
+        font-weight: bold;
+      }
+      h2 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Keyboard Shortcuts</h2>
+    <div class="shortcut-list">
+      <div class="shortcut-item">
+        <span class="shortcut-key">t</span>
+        <span class="shortcut-action">Open Terminal</span>
+      </div>
+    </div>
+    <script src="settings.js"></script>
+  </body>
+</html>

@@ -29,9 +29,9 @@
     "build": "tsc",
     "watch": "tsc -w",
     "pack": "electron-builder --dir",
-    "dist": "tsc && electron-builder",
-    "dist:win": "tsc && electron-builder -w",
-    "dist:linux": "tsc && electron-builder -l"
+    "dist": "tsc && electron-builder --publish never",
+    "dist:win": "tsc && electron-builder -w --publish never",
+    "dist:linux": "tsc && electron-builder -l --publish never"
   },
   "build": {
     "appId": "com.whichkey.app",
@@ -41,11 +41,11 @@
     },
     "files": [
       "dist/**/*",
-      "src/index.html"
+      "src/**/*"
     ],
     "win": {
       "target": "nsis",
-      "icon": "build/icon.ico"
+      "artifactName": "${productName}-Setup-${version}.${ext}"
     },
     "linux": {
       "target": [
@@ -53,14 +53,11 @@
         "rpm"
       ],
       "category": "Utility",
-      "icon": "build/icon.png"
+      "artifactName": "${productName}-${version}.${ext}"
     },
     "mac": {
       "target": "dmg",
-      "icon": "build/icon.icns"
+      "artifactName": "${productName}-${version}.${ext}"
     }
-  },
-  "dependencies": {
-    "whichkey": "file:"
   }
 }
